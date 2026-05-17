@@ -12,7 +12,7 @@ El desarrollo se realizó siguiendo el enfoque de Spec Driven Development, donde
 
 ## IA utilizada
 
-ChatGPT
+Claude
 
 ## Archivos del proyecto
 

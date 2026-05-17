@@ -1,11 +1,11 @@
 # Prompt utilizado
 
 IA utilizada:
-ChatGPT
+Claude
 
 Prompt:
 
-Actúa como un ingeniero de software experto en Spec Driven Development. Necesito que desarrolles una aplicación web sencilla llamada “Calculadora de Nota Final Universitaria”, siguiendo estrictamente los requerimientos especificados.
+Actúa como un ingeniero de software experto en Spec Driven Development. Necesito que desarrolles una aplicación web sencilla llamada "Calculadora de Nota Final Universitaria", siguiendo estrictamente los requerimientos especificados.
 
 Primero interpreta la especificación, luego genera la solución completa en un solo archivo HTML que incluya HTML, CSS y JavaScript interno. La aplicación debe funcionar sin backend, sin instalación de librerías externas y debe poder ejecutarse abriendo el archivo index.html en un navegador.
 
@@ -46,7 +46,7 @@ nota_necesaria = (3.0 - nota_acumulada) / (porcentaje_restante / 100)
 5. Si la suma de porcentajes supera 100%, debe aparecer un error.
 
 Pruebas que debe incluir la respuesta:
-Después del código, incluye una sección llamada “Pruebas de validación”, donde expliques al menos 5 casos de prueba:
+Después del código, incluye una sección llamada "Pruebas de validación", donde expliques al menos 5 casos de prueba:
 1. Caso normal donde sí se puede aprobar.
 2. Caso donde ya va aprobando.
 3. Caso donde necesita más de 5.0.
