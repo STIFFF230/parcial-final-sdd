@@ -1,60 +1,58 @@
 # Prompt utilizado
 
-IA utilizada:
-Claude
+IA utilizada: Claude
+Plan utilizado: Claude de pago
 
-Prompt:
+## Prompt único enviado a la IA
 
-Actúa como un ingeniero de software experto en Spec Driven Development. Necesito que desarrolles una aplicación web sencilla llamada "Calculadora de Nota Final Universitaria", siguiendo estrictamente los requerimientos especificados.
+Actúa como un ingeniero de software experto en Spec Driven Development (SDD).
 
-Primero interpreta la especificación, luego genera la solución completa en un solo archivo HTML que incluya HTML, CSS y JavaScript interno. La aplicación debe funcionar sin backend, sin instalación de librerías externas y debe poder ejecutarse abriendo el archivo index.html en un navegador.
+CONTEXTO DEL PROYECTO:
+Este proyecto se llama "parcial-final-sdd" y está conectado desde mi repositorio de GitHub. Contiene los siguientes archivos:
 
-ESPECIFICACIÓN DEL SISTEMA
+- SPEC.md → Especificación del sistema con requerimientos funcionales (RF), no funcionales (RNF) y reglas de cálculo.
+- PROMPT.md → Documento donde está registrado el prompt original utilizado.
+- README.md → Descripción general del proyecto.
+- ANALISIS.md → Análisis del resultado.
+- index.html → Archivo donde DEBE quedar la solución completa (actualmente está vacío).
 
-Objetivo:
-Crear una aplicación web que permita a un estudiante calcular cuánto necesita sacar en la última nota de una materia para alcanzar una nota final mínima de 3.0.
+TU TAREA:
+1. Lee primero el archivo SPEC.md del repositorio. Esa es la fuente de verdad del proyecto.
+2. Lee también PROMPT.md para entender el contexto adicional.
+3. A partir de la especificación, genera la solución completa de la aplicación web llamada "Calculadora de Nota Final Universitaria".
+4. Toda la solución debe ir en UN SOLO archivo llamado index.html que contenga HTML, CSS y JavaScript internos (sin librerías externas, sin backend, sin dependencias).
+5. La aplicación debe ejecutarse abriendo index.html directamente en un navegador, incluso sin conexión a internet.
 
-Requerimientos funcionales:
-RF01. El sistema debe permitir ingresar el nombre de la materia.
-RF02. El sistema debe permitir ingresar las notas ya obtenidas.
-RF03. El sistema debe permitir ingresar el porcentaje de cada nota ya obtenida.
-RF04. El sistema debe permitir ingresar el porcentaje que falta por evaluar.
-RF05. El sistema debe calcular automáticamente la nota acumulada.
-RF06. El sistema debe calcular cuánto necesita sacar el estudiante en la última nota para llegar a 3.0.
-RF07. Si el estudiante ya alcanza 3.0 con las notas actuales, el sistema debe mostrar un mensaje indicando que ya va aprobando.
-RF08. Si la nota necesaria es mayor a 5.0, el sistema debe mostrar un mensaje indicando que no es posible alcanzar 3.0 solo con la nota restante.
-RF09. El sistema debe validar que las notas estén entre 0.0 y 5.0.
-RF10. El sistema debe validar que los porcentajes no superen el 100%.
-RF11. El sistema debe mostrar el resultado de forma clara, incluyendo materia, nota acumulada, porcentaje evaluado, porcentaje restante y nota necesaria.
-RF12. El sistema debe tener un botón para limpiar todos los campos.
+REQUISITOS DE CUMPLIMIENTO:
+- Implementa TODOS los requerimientos funcionales (RF) definidos en SPEC.md.
+- Implementa TODOS los requerimientos no funcionales (RNF) definidos en SPEC.md.
+- Aplica las reglas de cálculo exactamente como están especificadas:
+  * nota_acumulada = suma de (nota * porcentaje / 100)
+  * nota_necesaria = (3.0 - nota_acumulada) / (porcentaje_restante / 100)
+  * Nota mínima para aprobar: 3.0
+  * Si nota_necesaria > 5.0 → mostrar que no es posible aprobar
+  * Si el estudiante ya alcanza 3.0 → mostrar que ya va aprobando
+- Validaciones obligatorias:
+  * Notas entre 0.0 y 5.0
+  * Porcentajes que no superen 100% en total
+  * Mensajes de error claros para el usuario
+- Resultados con 2 decimales.
+- Diseño responsive (computador y celular).
+- Código comentado en las partes principales.
+- Estilo visual moderno con tarjetas, botones claros y colores suaves.
 
-Requerimientos no funcionales:
-RNF01. La interfaz debe ser sencilla, clara y fácil de usar.
-RNF02. El diseño debe ser responsive para verse bien en computador y celular.
-RNF03. El código debe estar comentado en las partes principales.
-RNF04. La aplicación debe funcionar sin conexión a internet.
-RNF05. El cálculo debe redondearse a dos decimales.
-RNF06. El sistema debe mostrar mensajes de error comprensibles para el usuario.
-RNF07. El diseño debe tener estilo visual moderno, con tarjetas, botones claros y colores suaves.
+FORMATO DE TU RESPUESTA:
+1. Primero, una breve explicación (máximo 5 líneas) de cómo tu solución sigue el enfoque Spec Driven Development.
+2. Luego, el código completo del archivo index.html dentro de un bloque de código.
+3. Después, una sección llamada "Pruebas de validación" con al menos 5 casos de prueba:
+   - Caso 1: estudiante que sí puede aprobar (caso normal).
+   - Caso 2: estudiante que ya va aprobando.
+   - Caso 3: estudiante que necesita más de 5.0 (imposible).
+   - Caso 4: porcentajes que suman más de 100%.
+   - Caso 5: nota fuera del rango permitido.
+4. Finalmente, una sección llamada "Análisis de cumplimiento" donde indiques qué requerimientos del SPEC.md se cumplen y cuáles se podrían mejorar.
 
-Reglas de cálculo:
-1. La nota final mínima para aprobar es 3.0.
-2. La nota acumulada se calcula multiplicando cada nota por su porcentaje y dividiendo entre 100.
-3. La nota necesaria se calcula así:
-nota_necesaria = (3.0 - nota_acumulada) / (porcentaje_restante / 100)
-4. Si porcentaje_restante es 0, el sistema debe indicar que no hay porcentaje pendiente por evaluar.
-5. Si la suma de porcentajes supera 100%, debe aparecer un error.
-
-Pruebas que debe incluir la respuesta:
-Después del código, incluye una sección llamada "Pruebas de validación", donde expliques al menos 5 casos de prueba:
-1. Caso normal donde sí se puede aprobar.
-2. Caso donde ya va aprobando.
-3. Caso donde necesita más de 5.0.
-4. Caso con porcentajes mayores a 100%.
-5. Caso con nota fuera del rango permitido.
-
-Formato de respuesta:
-1. Explica brevemente cómo la solución sigue el enfoque Spec Driven Development.
-2. Entrega el código completo del archivo index.html.
-3. Entrega las pruebas de validación.
-4. Entrega un análisis corto indicando qué requerimientos se cumplieron y qué se podría mejorar.
+IMPORTANTE:
+- No me pidas confirmación ni hagas preguntas adicionales. Genera la solución completa en una sola respuesta.
+- El código debe estar listo para copiar y pegar en index.html sin modificaciones.
+- Si encuentras ambigüedades en SPEC.md, decide tú mismo la mejor implementación y explica brevemente por qué en el análisis final.
