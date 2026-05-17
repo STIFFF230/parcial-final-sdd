@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <!-- RNF02: viewport para diseño responsive en computador y celular -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- RNF03: sin recursos externos, todo funciona offline -->
+    <title>Calculadora de Nota Final Universitaria</title>
+    <style>
+        /* =========================================================
+           ESTILOS (RNF01 interfaz clara, RNF02 responsive)
+           ========================================================= */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            /* Colores suaves en degradado */
+            background: linear-gradient(135deg, #e0f2fe 0%, #ede9fe 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #1f2937;
+        }
+
+        .contenedor {
+            max-width: 760px;
+            margin: 0 auto;
+        }
+
+        /* Tarjeta principal con sombra suave */
+        .tarjeta {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        h1 {
+            color: #4338ca;
+            text-align: center;
+            margin-bottom: 8px;
+            font-size: 1.7rem;
+        }
+
+        .subtitulo {
+            text-align: center;
+            color: #6b7280;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+
+        h2 {
+            color: #4338ca;
+            font-size: 1.15rem;
+            margin-bottom: 14px;
+            border-bottom: 2px solid #e0e7ff;
+            padding-bottom: 6px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #374151;
+            font-size: 0.92rem;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+            background: #f9fafb;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #6366f1;
+            background: #ffffff;
+        }
+
+        .grupo {
+            margin-bottom: 16px;
+        }
+
+        /* Fila para una nota (descripción + valor + porcentaje + eliminar) */
+        .fila-nota {
+            display: grid;
+            grid-template-columns: 1fr 110px 110px 44px;
+            gap: 10px;
+            align-items: end;
+            margin-bottom: 12px;
+            padding: 12px;
+            background: #f9fafb;
+            border-radius: 10px;
+            border: 1px solid #f3f4f6;
+        }
+
+        .fila-nota label {
+            font-size: 0.8rem;
+            margin-bottom: 4px;
+        }
+
+        /* Botones */
+        .botones {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+
+        button {
+            padding: 11px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.1s, box-shadow 0.2s;
+        }
+
+        button:hover { transform: translateY(-1px); }
+        button:active { transform: translateY(0); }
+
+        .btn-primario {
+            background: #4f46e5;
+            color: white;
+            flex: 1;
+            min-width: 130px;
+        }
+        .btn-primario:hover { background: #4338ca; }
+
+        .btn-secundario {
+            background: #e0e7ff;
+            color: #4338ca;
+        }
+        .btn-secundario:hover { background: #c7d2fe; }
+
+        .btn-limpiar {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+        .btn-limpiar:hover { background: #fecaca; }
+
+        .btn-eliminar {
+            background: #fef2f2;
+            color: #b91c1c;
+            padding: 8px;
+            font-size: 1.1rem;
+            line-height: 1;
+        }
+        .btn-eliminar:hover { background: #fee2e2; }
+
+        /* Resultados y mensajes */
+        #resultado {
+            margin-top: 18px;
+            padding: 18px;
+            border-radius: 12px;
+            font-size: 1rem;
+            line-height: 1.55;
+            display: none;
+        }
+
+        .res-exito {
+            background: #dcfce7;
+            border-left: 5px solid #16a34a;
+            color: #166534;
+        }
+        .res-info {
+            background: #dbeafe;
+            border-left: 5px solid #2563eb;
+            color: #1e40af;
+        }
+        .res-advertencia {
+            background: #fef3c7;
+            border-left: 5px solid #d97706;
+            color: #92400e;
+        }
+        .res-error {
+            background: #fee2e2;
+            border-left: 5px solid #dc2626;
+            color: #991b1b;
+        }
+
+        .resultado-titulo {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+
+        .resultado-detalle {
+            margin-top: 8px;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* RNF02: ajustes responsive para celular */
+        @media (max-width: 600px) {
+            .fila-nota {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+            .fila-nota > div:first-child {
+                grid-column: 1 / -1;
+            }
+            .fila-nota .btn-eliminar {
+                width: 100%;
+            }
+            h1 { font-size: 1.4rem; }
+            .tarjeta { padding: 20px; }
+            .botones button { flex: 1 1 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="contenedor">
+
+        <!-- Encabezado -->
+        <div class="tarjeta">
+            <h1>📚 Calculadora de Nota Final</h1>
+            <p class="subtitulo">Descubre cuánto necesitas sacar en la última nota para aprobar con 3.0</p>
+        </div>
+
+        <!-- Formulario de entrada -->
+        <div class="tarjeta">
+            <h2>Datos de la materia</h2>
+
+            <!-- RF01: nombre de la materia -->
+            <div class="grupo">
+                <label for="materia">Nombre de la materia</label>
+                <input type="text" id="materia" placeholder="Ej: Cálculo Diferencial" maxlength="60">
+            </div>
+
+            <h2 style="margin-top: 18px;">Notas obtenidas</h2>
+            <!-- RF02 y RF03: contenedor dinámico de notas y porcentajes -->
+            <div id="lista-notas"></div>
+
+            <div class="botones">
+                <button type="button" class="btn-secundario" onclick="agregarFilaNota()">
+                    ➕ Agregar nota
+                </button>
+            </div>
+
+            <div class="botones">
+                <button type="button" class="btn-primario" onclick="calcular()">
+                    🧮 Calcular
+                </button>
+                <!-- RF10: limpiar -->
+                <button type="button" class="btn-limpiar" onclick="limpiar()">
+                    🗑️ Limpiar
+                </button>
+            </div>
+
+            <!-- Zona de resultados / mensajes -->
+            <div id="resultado"></div>
+        </div>
+    </div>
+
+    <script>
+        /* ============================================================
+           LÓGICA (RF04–RF09 y RNF04–RNF06)
+           ============================================================ */
+
+        // Nota mínima requerida para aprobar (Reglas de cálculo)
+        const NOTA_MINIMA = 3.0;
+        const NOTA_MAXIMA = 5.0;
+
+        // Contador de filas para generar IDs únicos
+        let contadorFilas = 0;
+
+        /**
+         * Crea una nueva fila de entrada para una nota y su porcentaje.
+         * RF02 y RF03: ingresar notas y porcentajes.
+         */
+        function agregarFilaNota(descripcionPorDefecto = '') {
+            contadorFilas++;
+            const idFila = contadorFilas;
+            const contenedor = document.getElementById('lista-notas');
+
+            const fila = document.createElement('div');
+            fila.className = 'fila-nota';
+            fila.id = 'fila-' + idFila;
+            fila.innerHTML = `
+                <div>
+                    <label>Descripción</label>
+                    <input type="text" class="desc-nota"
+                           placeholder="Ej: Parcial 1"
+                           value="${descripcionPorDefecto}" maxlength="40">
+                </div>
+                <div>
+                    <label>Nota (0.0 - 5.0)</label>
+                    <input type="number" class="valor-nota"
+                           min="0" max="5" step="0.01" placeholder="0.00">
+                </div>
+                <div>
+                    <label>Porcentaje (%)</label>
+                    <input type="number" class="porcentaje-nota"
+                           min="0" max="100" step="0.01" placeholder="0">
+                </div>
+                <div>
+                    <label>&nbsp;</label>
+                    <button type="button" class="btn-eliminar"
+                            onclick="eliminarFila(${idFila})" title="Eliminar nota">✕</button>
+                </div>
+            `;
+            contenedor.appendChild(fila);
+        }
+
+        /**
+         * Elimina una fila de nota. Siempre se garantiza al menos una fila.
+         */
+        function eliminarFila(idFila) {
+            const filas = document.querySelectorAll('.fila-nota');
+            if (filas.length <= 1) {
+                mostrarMensaje('Debe existir al menos una nota.', 'res-advertencia', 'Atención');
+                return;
+            }
+            const fila = document.getElementById('fila-' + idFila);
+            if (fila) fila.remove();
+        }
+
+        /**
+         * Función principal de cálculo (RF04, RF05, RF06, RF07).
+         * Aplica las reglas:
+         *   nota_acumulada    = Σ (nota * porcentaje / 100)
+         *   porcentaje_restante = 100 - Σ porcentajes
+         *   nota_necesaria    = (3.0 - nota_acumulada) / (porcentaje_restante / 100)
+         */
+        function calcular() {
+            // Leer todas las filas y obtener pares (nota, porcentaje)
+            const filas = document.querySelectorAll('.fila-nota');
+            const notas = [];
+
+            for (let i = 0; i < filas.length; i++) {
+                const valorTxt = filas[i].querySelector('.valor-nota').value.trim();
+                const pctTxt   = filas[i].querySelector('.porcentaje-nota').value.trim();
+
+                // Si una fila está totalmente vacía, se omite
+                if (valorTxt === '' && pctTxt === '') continue;
+
+                // Si está incompleta -> error claro (RNF05)
+                if (valorTxt === '' || pctTxt === '') {
+                    return mostrarMensaje(
+                        `La fila #${i + 1} está incompleta. Debes ingresar tanto la nota como su porcentaje.`,
+                        'res-error', '❌ Datos incompletos'
+                    );
+                }
+
+                const nota = parseFloat(valorTxt);
+                const pct  = parseFloat(pctTxt);
+
+                // RF08: validar rango de nota
+                if (isNaN(nota) || nota < 0 || nota > NOTA_MAXIMA) {
+                    return mostrarMensaje(
+                        `La nota de la fila #${i + 1} debe estar entre 0.0 y 5.0. Valor recibido: "${valorTxt}".`,
+                        'res-error', '❌ Nota fuera de rango'
+                    );
+                }
+
+                // Validación adicional de porcentaje individual
+                if (isNaN(pct) || pct <= 0 || pct > 100) {
+                    return mostrarMensaje(
+                        `El porcentaje de la fila #${i + 1} debe ser mayor que 0 y máximo 100.`,
+                        'res-error', '❌ Porcentaje inválido'
+                    );
+                }
+
+                notas.push({ nota, pct });
+            }
+
+            // Debe haber al menos una nota válida
+            if (notas.length === 0) {
+                return mostrarMensaje(
+                    'Debes ingresar al menos una nota con su porcentaje.',
+                    'res-advertencia', '⚠️ Sin datos'
+                );
+            }
+
+            // RF09: validar que los porcentajes no superen 100%
+            const sumaPorcentajes = notas.reduce((s, n) => s + n.pct, 0);
+            if (sumaPorcentajes > 100.0001) { // pequeña tolerancia por flotantes
+                return mostrarMensaje(
+                    `La suma de los porcentajes es ${sumaPorcentajes.toFixed(2)}% y no puede superar el 100%.`,
+                    'res-error', '❌ Porcentajes inválidos'
+                );
+            }
+
+            // RF04: calcular nota acumulada
+            const notaAcumulada = notas.reduce((s, n) => s + (n.nota * n.pct / 100), 0);
+            const porcentajeRestante = 100 - sumaPorcentajes;
+            const materia = document.getElementById('materia').value.trim() || 'la materia';
+
+            // Caso A: ya cubrió el 100% del curso -> nota final exacta
+            if (porcentajeRestante <= 0.0001) {
+                if (notaAcumulada >= NOTA_MINIMA) {
+                    return mostrarMensaje(
+                        `Tu nota final en ${materia} es <strong>${notaAcumulada.toFixed(2)}</strong>. ¡Aprobaste! 🎉`,
+                        'res-exito', '✅ Materia aprobada'
+                    );
+                } else {
+                    return mostrarMensaje(
+                        `Tu nota final en ${materia} es <strong>${notaAcumulada.toFixed(2)}</strong>, por debajo del 3.0 requerido.`,
+                        'res-error', '❌ Materia no aprobada'
+                    );
+                }
+            }
+
+            // RF06: si lo acumulado ya alcanza 3.0 sin contar lo que falta
+            if (notaAcumulada >= NOTA_MINIMA) {
+                return mostrarMensaje(
+                    `¡Felicidades! Con lo que llevas en ${materia} ya estás aprobando.` +
+                    `<div class="resultado-detalle">` +
+                    `Nota acumulada: <strong>${notaAcumulada.toFixed(2)}</strong> de 5.00<br>` +
+                    `Porcentaje evaluado: <strong>${sumaPorcentajes.toFixed(2)}%</strong><br>` +
+                    `Porcentaje restante: <strong>${porcentajeRestante.toFixed(2)}%</strong>` +
+                    `</div>`,
+                    'res-exito', '✅ Ya estás aprobando'
+                );
+            }
+
+            // RF05: calcular nota necesaria con la fórmula del SPEC
+            const notaNecesaria = (NOTA_MINIMA - notaAcumulada) / (porcentajeRestante / 100);
+
+            // RF07: si la nota necesaria es superior a 5.0 es imposible aprobar
+            if (notaNecesaria > NOTA_MAXIMA) {
+                return mostrarMensaje(
+                    `Lamentablemente <strong>no es posible aprobar ${materia}</strong>. ` +
+                    `Necesitarías sacar <strong>${notaNecesaria.toFixed(2)}</strong> ` +
+                    `en el ${porcentajeRestante.toFixed(2)}% restante, pero el máximo permitido es 5.00.` +
+                    `<div class="resultado-detalle">` +
+                    `Nota acumulada: <strong>${notaAcumulada.toFixed(2)}</strong> de 5.00<br>` +
+                    `Porcentaje evaluado: <strong>${sumaPorcentajes.toFixed(2)}%</strong>` +
+                    `</div>`,
+                    'res-error', '❌ Imposible aprobar'
+                );
+            }
+
+            // Caso normal: aún puede aprobar
+            mostrarMensaje(
+                `Para aprobar ${materia} con 3.00, necesitas sacar al menos ` +
+                `<strong>${notaNecesaria.toFixed(2)}</strong> ` +
+                `en el ${porcentajeRestante.toFixed(2)}% restante.` +
+                `<div class="resultado-detalle">` +
+                `Nota acumulada: <strong>${notaAcumulada.toFixed(2)}</strong> de 5.00<br>` +
+                `Porcentaje evaluado: <strong>${sumaPorcentajes.toFixed(2)}%</strong><br>` +
+                `Porcentaje restante: <strong>${porcentajeRestante.toFixed(2)}%</strong>` +
+                `</div>`,
+                'res-info', '📝 Nota necesaria'
+            );
+        }
+
+        /**
+         * Muestra un mensaje en la zona de resultados con estilo según el tipo.
+         * RNF05: los mensajes son claros y descriptivos.
+         */
+        function mostrarMensaje(mensajeHtml, claseEstilo, titulo) {
+            const box = document.getElementById('resultado');
+            box.className = '';
+            box.classList.add(claseEstilo);
+            box.style.display = 'block';
+            box.innerHTML = `<div class="resultado-titulo">${titulo}</div>${mensajeHtml}`;
+            // Llevar el scroll al resultado en pantallas pequeñas
+            box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        /**
+         * RF10: limpia todos los campos y restablece las filas por defecto.
+         */
+        function limpiar() {
+            document.getElementById('materia').value = '';
+            document.getElementById('lista-notas').innerHTML = '';
+            contadorFilas = 0;
+            document.getElementById('resultado').style.display = 'none';
+            // Crear las tres filas iniciales por defecto
+            agregarFilaNota('Parcial 1');
+            agregarFilaNota('Parcial 2');
+            agregarFilaNota('Trabajos');
+        }
+
+        // Inicialización: al cargar la página se agregan filas por defecto
+        window.addEventListener('DOMContentLoaded', () => {
+            agregarFilaNota('Parcial 1');
+            agregarFilaNota('Parcial 2');
+            agregarFilaNota('Trabajos');
+        });
+    </script>
+</body>
+</html>
